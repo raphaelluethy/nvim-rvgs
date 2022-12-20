@@ -31,3 +31,4 @@ vim.opt.updatetime = 50
 
 vim.g.mapleader = " "
 vim.g.settimeoutlen = 1000
+
