@@ -1,4 +1,5 @@
 local lsp = require("lsp-zero")
+local lspkind = require("lspkind")
 
 lsp.preset("recommended")
 
@@ -26,23 +27,34 @@ local cmp_mappings = lsp.defaults.cmp_mappings({
     }),
     ["<C-Space>"] = cmp.mapping.complete()
 })
-
 -- disable completion with tab
 -- this helps with copilot setup
 cmp_mappings['<Tab>'] = nil
 cmp_mappings['<S-Tab>'] = nil
 
 lsp.setup_nvim_cmp({
-    mapping = cmp_mappings
+    mapping = cmp_mappings,
+    formatting = {
+        format = lspkind.cmp_format({
+            with_text = false,
+            maxwidth = 50
+        })
+    }
 })
 
 lsp.set_preferences({
-    suggest_lsp_servers = false,
+    suggest_lsp_servers = true,
+    setup_servers_on_start = true,
+    set_lsp_keymaps = true,
+    configure_diagnostics = true,
+    cmp_capabilities = true,
+    manage_nvim_cmp = true,
+    call_servers = 'local',
     sign_icons = {
-        error = 'E',
-        warn = 'W',
-        hint = 'H',
-        info = 'I'
+        error = '✘',
+        warn = '▲',
+        hint = '⚑',
+        info = ''
     }
 })
 
@@ -55,14 +67,6 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagn
 vim.diagnostic.config({
     virtual_text = true
 })
-
--- vim.api.nvim_create_autocmd("BufWritePre", {
---     callback = function()
---         vim.lsp.buf.format({
---             async = true
---         })
---     end
--- })
 
 lsp.on_attach(function(client, bufnr)
     local opts = {
@@ -96,6 +100,6 @@ lsp.on_attach(function(client, bufnr)
     vim.keymap.set("n", "gd", vim.lsp.buf.definition, keymap_opts)
     vim.keymap.set("n", "ga", vim.lsp.buf.code_action, keymap_opts)
 end)
-
+lsp.nvim_workspace()
 lsp.setup()
 

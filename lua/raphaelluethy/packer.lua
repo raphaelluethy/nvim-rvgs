@@ -16,6 +16,7 @@ return require('packer').startup(function(use)
         end
     }
 
+    use('onsails/lspkind-nvim')
     -- Visualize lsp progress
     use({
         "j-hui/fidget.nvim",
