@@ -2,27 +2,27 @@ require("raphaelluethy.set")
 require("raphaelluethy.remap")
 
 local augroup = vim.api.nvim_create_augroup
-local RaphaelLuethyGroup = augroup('raphaelluethy', {})
+local RaphaelLuethyGroup = augroup("raphaelluethy", {})
 
 local autocmd = vim.api.nvim_create_autocmd
-local yank_group = augroup('HighlightYank', {})
+local yank_group = augroup("HighlightYank", {})
 
 function R(name)
     require("plenary.reload").reload_module(name)
 end
 
-autocmd('TextYankPost', {
+autocmd("TextYankPost", {
     group = yank_group,
-    pattern = '*',
+    pattern = "*",
     callback = function()
         vim.highlight.on_yank({
-            higroup = 'IncSearch',
+            higroup = "IncSearch",
             timeout = 40,
         })
     end,
 })
 
-autocmd({"BufWritePre"}, {
+autocmd({ "BufWritePre" }, {
     group = RaphaelLuethyGroup,
     pattern = "*",
     command = [[%s/\s\+$//e]],
@@ -31,3 +31,8 @@ autocmd({"BufWritePre"}, {
 vim.g.netrw_browse_split = 0
 vim.g.netrw_banner = 0
 vim.g.netrw_winsize = 25
+
+function _G.vim_notify(msg, level)
+    vim.cmd("redraw")
+    vim.notify(msg, level)
+end
